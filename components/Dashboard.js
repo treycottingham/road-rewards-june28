@@ -4,42 +4,67 @@ import { Actions, ActionConst } from 'react-native-router-flux'
 import { KeepAwake } from 'expo'
 import moment from 'moment'
 
+const apiURL = 'https://road-rewards-1.herokuapp.com/users/1'
+
 export default class Landing extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
       start: moment(),
-      points: 0
+      counter: 0,
+      points: 0,
+      pointTotal: 0,
+      isLoaded: false,
+      pointData: 0,
+      // pointDataIndex: this.pointData.pointTotal
     }
+  }
+  fetchPoints() {
+    fetch(apiURL)
+      .then(response => response.json())
+        .then(points => {
+          return this.setState({
+            pointData: points.pointTotal,
+            isLoaded:true})
+          console.log('insidefetch',this.state.pointData)
+        }).catch((err) => console.log('err', err))
+  }
+  componentDidMount() {
+    this.fetchPoints()
   }
   signOut() {
     Actions.landing()
   }
+  logPoints = () => {
+    this.setState({
+      pointTotal: this.pointData + this.points
+    })
+  }
   render() {
     setTimeout(() => {
       this.setState({
-        counter: moment().format('LT') // changing moment.js in node modules to omit the AM/PM
-        
+        counter: moment(),
+        points: moment().diff(this.state.start, 'seconds')
       })
-    }, 60000)
-    console.log('HELLOOOOOOOOOO', this.state.start)
+    }, 1000)
+    console.log('THIS.STATE.POINTTOTAL', this.state.pointTotal)
     return (
       <View style={styles.container}>
         <KeepAwake />
         <Text style={styles.text}>Dashboard</Text>
         <View>
-          <Text style={styles.text}>Points Earned</Text>
-          {/* <Text style={styles.points}>{this.state.counter}</Text> */}
-          <Text style={styles.points}></Text>
-          {/* <Text style={styles.points}>{this.state.start}</Text> */}
+          <Text style={styles.text}>Points Earned This Session</Text>
+          <Text style={styles.points}>{this.state.points}</Text>
+          <Text style={styles.text}>Total Points Earned</Text>
+          {this.state.isLoaded ? <Text style={styles.points}>{this.state.pointData}</Text> : <Text style={styles.points}>Unable to find points</Text>}
         </View>
-        {/* <TouchableHighlight 
+        <TouchableHighlight 
         style={styles.dashButton}
-        title='Log In'
-        onPress={this.logIn}
+        title='Add Points to Total'
+        onPress={this.logPoints}
         >
-          <Text style={styles.text}>Push to Start/Stop</Text>
-        </TouchableHighlight> */}
+          <Text style={styles.text}>Add Points to Total</Text>
+        </TouchableHighlight>
         <TouchableHighlight 
         style={styles.logOutButton}
         title='Sign Out'
@@ -81,7 +106,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: '25%',
     marginLeft: '25%',
-    // paddingTop: '1%',
     backgroundColor: 'gray',
     borderRadius: 50,
     borderWidth: 0,

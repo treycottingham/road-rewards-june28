@@ -1,0 +1,10 @@
+{
+  "user1": {
+    "id": 1,
+    "pointTotal": 0
+  },
+  "user2": {
+    "id": 2,
+    "pointTotal": 74
+  }
+}
