@@ -11,18 +11,16 @@ export default class Logo extends React.Component {
       <Image
         source={require('../rrlogo.png')}
         style={styles.image}
-        ></Image>
+      >
+      </Image>
     )
   }
 }
 
 const styles = StyleSheet.create({
     image: {
-      width: 100,
-      height: 50,
-      position: "absolute",
-      bottom: 8,
-      right: 8,
+      width: 350,
+      height: 200,
     },
   }
 )

@@ -97,13 +97,13 @@ export default class Landing extends React.Component {
           <Text
           style={styles.leftTopMargin}
           >Total Points Earned</Text>
-          {this.state.isLoaded ? <Text style={styles.leftTopMargin}>{this.state.storedPoints}</Text> : <Text style={styles.points}>Unable to find points</Text>}
-        <Button bordered
+          {this.state.isLoaded ? <Text style={styles.leftTopMargin}>{this.state.storedPoints}</Text> : <Text style={styles.points}>Loading...</Text>}
+        <Button bordered success
           onPress={this.logPoints}
           style={styles.leftTopMargin}>
             <Text>Add Points to Total</Text>
         </Button>
-        <Button bordered
+        <Button bordered success
           onPress={this.signOut}
           style={styles.leftTopMargin}>
             <Text>Log Out</Text>

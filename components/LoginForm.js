@@ -3,14 +3,47 @@ import { StyleSheet, View, TouchableHighlight } from 'react-native'
 // import { FormLabel, FormInput, FormValidationMessage } from 'react-native-elements'
 import { Actions, ActionConst } from 'react-native-router-flux'
 import { Container, Header, Item, Text, Label, Input, Form, Content, Button } from 'native-base'
+import * as firebase from 'firebase'
 
+import Logo from './Logo'
 
 export default class LoginForm extends React.Component {
-  logIn() {
-    Actions.loggedIn()
+  constructor(props) {
+    super(props)
+    this.state = {
+      email: '',
+      password: '',
+    }
+  }
+  logIn = (email, password) => {
+    // console.log('state',this.state)
+    Actions.dash()
+
+
+  //   try {
+  //     if (this.state.password.length < 8) {
+  //       console.log('password too short')
+  //       return
+  //     } 
+  //     firebase.auth().createUserWithEmailAndPassword(email, password)
+  //   }
+  //   catch (error) {
+  //     console.log(error.toString())
+  //   }
+  }
+
+  // signUp = (email, password) => {
+  // }
+  // logIn() {
+  //   Actions.loggedIn()
+  // }
+  test() {
+    console.log('state',this.state)
+    // console.log('props',this.props.firebaseConfig)
   }
   signUp() {
-    Actions.signUp()
+    console.log(this.state)
+    Actions.signup()
   }
   render() {
       return (
@@ -19,26 +52,25 @@ export default class LoginForm extends React.Component {
           <Content>
             <Form>
               <Item floatingLabel>
-                <Label>Username</Label>
-                <Input />
+                <Label>Email</Label>
+                <Input 
+                onChangeText={(email) => this.setState({email})}/>
               </Item>
               <Item floatingLabel last>
                 <Label>Password</Label>
-                <Input />
+                <Input 
+                onChangeText={(password) => this.setState({password})}
+                secureTextEntry={true} />
               </Item>
-              <Button bordered
-              onPress={this.logIn}
+              <Button full bordered success
+              onPress={() => this.logIn(this.state.email, this.state.password)}
               style={styles.button}
               >
                 <Text>Login</Text>
               </Button>
-              <Button bordered
-              onPress={this.signUp}
-              style={styles.button}>
-                <Text>Sign Up</Text>
-              </Button>
             </Form>
           </Content>
+          <Logo />
         </Container>
     )
   }
@@ -46,8 +78,8 @@ export default class LoginForm extends React.Component {
 
 const styles = StyleSheet.create({
   button: {
-    marginTop: 6,
-    marginLeft: 16,
+    marginTop: 12,
+    // marginLeft: 16,
   },
 })
 

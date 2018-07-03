@@ -1,5 +1,9 @@
 import React from 'react'
-import { Animated, Text, View } from 'react-native'
+import { Animated, View } from 'react-native'
+import { Container, Form, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base'
+import { Actions, ActionConst } from 'react-native-router-flux'
+
+import FadeLogo from './FadeLogo'
 
 class FadeInView extends React.Component {
   state = {
@@ -25,6 +29,14 @@ class FadeInView extends React.Component {
       }
     ).start()
   }
+  logInButton = () => {
+    console.log('login')
+    Actions.login()
+  }
+  signUpButton = () => {
+    console.log('signup')
+    Actions.signup()
+  }
   render() {
     let { fadeAnim } = this.state
 
@@ -45,11 +57,14 @@ class FadeInView extends React.Component {
 export default class App extends React.Component {
   render() {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-        <FadeInView style={{width: 250, height: 50, backgroundColor: 'powderblue'}}>
-          <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text>
+      // <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+        <FadeInView >
+          <FadeLogo />
+          {/* <Text style={{fontSize: 28, textAlign: 'center', margin: 10}}>Fading in</Text> */}
+          {/* <Button bordered full success onPress={() => this.logInButton}><Text>Log In</Text></Button>
+          <Button bordered full success onPress={this.signUpButton}><Text>SignUp</Text></Button>
+        </View> */}
         </FadeInView>
-      </View>
     )
   }
 }
