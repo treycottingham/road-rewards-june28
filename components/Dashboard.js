@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, TouchableHighlight } from 'react-native'
+import { StyleSheet, View, ImageBackground, TouchableHighlight } from 'react-native'
 import { Actions } from 'react-native-router-flux'
 import { KeepAwake } from 'expo'
 import moment from 'moment'
@@ -85,30 +85,47 @@ export default class Landing extends React.Component {
     }, 1000) //140 is speed I could double press
     return (
       <Container>
-        <KeepAwake />
         <Header />
-        <Content>
-          <Text
-          style={styles.leftTopMargin}
-          >Points Earned This Session</Text>
-          <Text
-          style={styles.leftTopMargin}
-          >{this.state.counter}</Text>
-          <Text
-          style={styles.leftTopMargin}
-          >Total Points Earned</Text>
-          {this.state.isLoaded ? <Text style={styles.leftTopMargin}>{this.state.storedPoints}</Text> : <Text style={styles.points}>Loading...</Text>}
-        <Button bordered success
-          onPress={this.logPoints}
-          style={styles.leftTopMargin}>
-            <Text>Add Points to Total</Text>
-        </Button>
-        <Button bordered success
-          onPress={this.signOut}
-          style={styles.leftTopMargin}>
-            <Text>Log Out</Text>
-        </Button>
-        </Content>
+        <KeepAwake />
+        <Container style={styles.container}>
+          <Content style={{marginTop: 200, textAlign: 'center'}}>
+            <Text
+            style={styles.leftTopMargin}
+            >Points Earned This Session</Text>
+            <ImageBackground
+            style={styles.background}
+            source={require('../odometer.jpg')}
+            >
+              <Text
+              style={styles.pointTotal}
+              >{this.state.counter}</Text>
+            </ImageBackground>
+            {/* <Text
+            style={styles.leftTopMargin}
+            >{this.state.counter}</Text> */}
+            <Text
+            style={styles.leftTopMargin}
+            >Total Points Earned</Text>
+            <ImageBackground
+            style={styles.background}
+            source={require('../odometer.jpg')}
+            >
+              {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text>Loading...</Text>}
+            </ImageBackground>
+            <Container>
+              <Button bordered success
+                onPress={this.logPoints}
+                style={{marginLeft: 28, marginTop: 10}}>
+                  <Text>Add Points to Total</Text>
+              </Button>
+              <Button bordered success
+                onPress={this.signOut}
+                style={{marginLeft: 68, marginTop: 10}}>
+                  <Text>Log Out</Text>
+              </Button>
+            </Container>
+          </Content>
+        </Container>
         <Logo />
       </Container>
     )
@@ -119,6 +136,13 @@ const styles = StyleSheet.create({
   leftTopMargin: {
     marginTop: 6,
     marginLeft: 16,
+    marginBottom: 5,
+    textAlign: 'center',
+  },
+  pointTotal: {
+    color: 'white',
+    // paddingRight: 20,
+    letterSpacing: 8.5,
   },
   image: {
     width: 100,
@@ -127,11 +151,17 @@ const styles = StyleSheet.create({
     bottom: 8,
     right: 8,
   },
+  background: {
+    flex: 1,
+    alignItems: 'flex-end',
+    width: 100,
+    marginLeft: 65,
+  },
   container: {
-    // flex: 1,
+    flex: 1,
     // backgroundColor: 'white',
-    // alignItems: 'center',
-    // justifyContent: 'center',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   points: {
     // textAlign: 'center',
