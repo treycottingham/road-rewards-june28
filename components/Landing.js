@@ -17,15 +17,17 @@ export default class Landing extends React.Component {
   }
     render() {
       return (
+        // <Container style={styles.container}>
         <Container style={styles.container}>
+          {/* <ImageBackground
+            style={styles.background}
+            source={require('../blurredbackground.jpg')}
+            >
+            <Text>Hi</Text>
+          </ImageBackground> */}
           <FadeView />
-          {/* {this.state.loginShown ? <LoginForm /> : null}
-          {this.state.signupShown ? <SignUp /> : null} */}
-          {/* <Container style={styles.buttonContainer}> */}
             <Button bordered full success style={styles.button} onPress={this.logInButton}><Text style={styles.buttonText}>Log In</Text></Button>
             <Button bordered full success style={styles.button} onPress={this.signUpButton}><Text style={styles.buttonText}>SignUp</Text></Button>
-          {/* </Container> */}
-          {/* <Logo /> */}
         </Container>
     )
   }
@@ -36,16 +38,18 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    // marginTop: '50%',
-    // marginLeft: '35%',
-    // marginTop: '5%',
+  },
+  background: {
+    flex: 1,
+    // alignItems: 'flex-end',
+    width: '100%',
+    height: '100%',
+    // marginLeft: 65,
   },
   button: {
     width: '100%',
   },
   buttonText: {
-    // marginLeft: '38%'
-    // textAlign: 'center'
   },
   image: {
     width: 100,

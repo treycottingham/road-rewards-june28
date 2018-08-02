@@ -13,7 +13,8 @@ export default class Landing extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      id: 1,
+      id: null,
+      email: '',
       startingMoment: moment(),
       currentMoment: 0,
       storedPoints: 0,
@@ -23,40 +24,36 @@ export default class Landing extends React.Component {
     }
   }
   componentDidMount() {
-    this.fetchPoints()
+    this.fetchPoints(this.props.id)
   }
-  fetchPoints() {
-    fetch(apiURL + this.state.id)
+  fetchPoints(id) {
+    fetch(apiURL + id)
       .then(response => response.json())
       .then(user => {
-        // console.log('USER', user)
-        // var pointMap = points.users.map(user => user.pointTotal)
+        console.log('USER IN FETCHPOINTS', user)
         var pointImport = user.pointTotal
+        var userID = user.id
         this.setState({
           storedPoints: pointImport,
+          id: userID,
           isLoaded: true
         })
       }).catch((err) => console.log('err', err))
-  }
+    }
   logPoints = () => {
-    // console.log('THIS.STATE.CURRENTMOMENT', this.state.currentMoment)
-    // console.log('THIS.STATE.POINTTOTAL', this.state.pointTotal)
-    // console.log('THIS.STATE.COUNTER', this.state.counter)
-    // console.log('THIS.STATE.STOREDPOINTS', this.state.storedPoints)
     var storedPoints = this.state.storedPoints + this.state.counter
     console.log('STOREDPOINTS', storedPoints)
     this.setState({
       storedPoints: storedPoints,
       startingMoment: moment()
     })
-    // console.log('THIS.STATE.STOREDPOINTS', this.state.storedPoints)
     this.updatePoints(storedPoints)
   }
   updatePoints = (data) => {
     let pointsPosted = {
       pointTotal: data
     }
-    // console.log('DATA', data, 'POINTSPOSTED', pointsPosted, 'ID', this.state.id)
+    console.log('DATA', data, 'POINTSPOSTED', pointsPosted, 'ID', this.state.id)
     fetch(apiURL + this.state.id, {
       method: 'PUT',
       body: JSON.stringify(pointsPosted),
@@ -66,9 +63,6 @@ export default class Landing extends React.Component {
       }
     })
     .then(res => res.json())
-    // .then(user => {
-    //   this.props.setUser(user)
-    // })
     .catch(function (error) {
       console.log('error')
     })
@@ -88,39 +82,36 @@ export default class Landing extends React.Component {
         <Header />
         <KeepAwake />
         <Container style={styles.container}>
-          <Content style={{marginTop: 200, textAlign: 'center'}}>
+          <Content style={{marginTop: 150}}>
             <Text
-            style={styles.leftTopMargin}
+            style={styles.bigText}
             >Points Earned This Session</Text>
             <ImageBackground
             style={styles.background}
             source={require('../odometer.jpg')}
             >
               <Text
-              style={styles.pointTotal}
+              style={styles.text}
               >{this.state.counter}</Text>
             </ImageBackground>
-            {/* <Text
-            style={styles.leftTopMargin}
-            >{this.state.counter}</Text> */}
             <Text
-            style={styles.leftTopMargin}
+            style={styles.bigText}
             >Total Points Earned</Text>
             <ImageBackground
             style={styles.background}
             source={require('../odometer.jpg')}
             >
-              {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text>Loading...</Text>}
+              {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text style={styles.pointTotal}>Loading...</Text>}
             </ImageBackground>
             <Container>
               <Button bordered success
                 onPress={this.logPoints}
-                style={{marginLeft: 28, marginTop: 10}}>
+                style={{marginLeft: 50, marginTop: 10}}>
                   <Text>Add Points to Total</Text>
               </Button>
               <Button bordered success
                 onPress={this.signOut}
-                style={{marginLeft: 68, marginTop: 10}}>
+                style={{marginLeft: 92, marginTop: 10}}>
                   <Text>Log Out</Text>
               </Button>
             </Container>
@@ -133,16 +124,17 @@ export default class Landing extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  leftTopMargin: {
+  bigText: {
     marginTop: 6,
-    marginLeft: 16,
     marginBottom: 5,
     textAlign: 'center',
+    fontSize: 25,
+    fontFamily: 'TrebuchetMS',
   },
   pointTotal: {
     color: 'white',
-    // paddingRight: 20,
-    letterSpacing: 8.5,
+    letterSpacing: 18,
+    // marginLeft: 40,
   },
   image: {
     width: 100,
@@ -154,85 +146,52 @@ const styles = StyleSheet.create({
   background: {
     flex: 1,
     alignItems: 'flex-end',
-    width: 100,
+    width: 150,
+    height: 25,
     marginLeft: 65,
   },
   container: {
     flex: 1,
-    // backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  points: {
-    // textAlign: 'center',
-    // marginTop: '2%',
-  },
-  logOutButton: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // marginRight: '25%',
-    // marginLeft: '25%',
-    // paddingTop: '1%',
-    // backgroundColor: 'yellow',
-    // borderRadius: 5,
-    // borderWidth: 0,
-    // borderColor: '#fff',
-    // width: '50%',
-    // height: '8%',
-  },
-  dashButton: {
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // marginRight: '25%',
-    // marginLeft: '25%',
-    // backgroundColor: 'gray',
-    // borderRadius: 50,
-    // borderWidth: 0,
-    // borderColor: '#fff',
-    // width: '50%',
-    // height: '18%',
-  },
   text: {
-    // fontSize: 20,
-    // fontWeight: 'bold',
-    // padding: 0,
-    // marginTop: '12%',
+    color: 'white',
+    letterSpacing: 18,
+    // marginLeft: 40,
   },
-  buttonText: {
-    // fontSize: 20,
-    // fontWeight: 'bold',
-  }
 })
 
-// <Container>
-// {/*<View style={styles.container}>*/}
-//   <KeepAwake />
-//   {/* <Text style={styles.text}>Dashboard</Text> */}
-//   <Text>Dashboard</Text>
-//   {/* <View> */}
-//   <Container>
-//     <Text style={styles.text}>Points Earned This Session</Text>
-//     <Text style={styles.points}>{this.state.counter}</Text>
-//     <Text style={styles.text}>Total Points Earned</Text>
-//     {this.state.isLoaded ? <Text style={styles.points}>{this.state.storedPoints}</Text> : <Text style={styles.points}>Unable to find points</Text>}
-//   <Button bordered light>
-//     <Text>Add Points to Total</Text>
-//   </Button>
-//   </Container>
-//   {/* </View> */}
-//   <TouchableHighlight
-//     style={styles.dashButton}
-//     title='Add Points to Total'
-//     onPress={this.logPoints}
-//   >
-//     <Text style={styles.text}>Add Points to Total</Text>
-//   </TouchableHighlight>
-//   <TouchableHighlight
-//     style={styles.logOutButton}
-//     title='Sign Out'
-//     onPress={this.signOut}
-//   >
-//     <Text style={styles.buttonText}>Sign Out</Text>
-//   </TouchableHighlight>
-//   {/* </View> */}
-// </Container>
+post = (data) => {
+  const url = `https://mo-jobs-database.herokuapp.com/company/`
+
+  let content = {
+    company: data.companyName,
+    resume: data.resume,
+    cover_letter: data.coverLetter,
+    date_applied: data.dateApplied,
+    interview_date: data.dateInterview,
+    description: data.description,
+    technologies: data.requiredTechnology
+  };
+
+  console.log('contnet', content)
+
+  fetch(url, {
+      method: 'POST',
+      body: JSON.stringify(content),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(resp => resp.json())
+    .then(company => {
+      console.log('response', company)
+      this.props.setCompany(company)
+    })
+    .catch(function (error) {
+      console.log('error')
+    })
+
+}

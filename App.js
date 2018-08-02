@@ -25,8 +25,8 @@ export default class App extends React.Component {
     return (
       <Router>        
         <Stack key="root">
-          <Scene hideNavBar={true} key="landing" component={Landing} />
-          <Scene hideNavBar={true} key="login" component={LoginForm} />
+          {/* <Scene hideNavBar={true} key="landing" component={Landing} /> */}
+          {/* <Scene hideNavBar={true} key="login" component={LoginForm} /> */}
           <Scene hideNavBar={true} key="signup" component={SignUp} />
           <Scene hideNavBar={true} key="dash" component={Dashboard} />
         </Stack>

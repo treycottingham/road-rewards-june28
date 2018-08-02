@@ -7,13 +7,17 @@ import * as firebase from 'firebase'
 
 import Logo from './Logo'
 
+const apiURL = 'https://road-rewards-1.herokuapp.com/users/'
+
 export default class SignUp extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      email: '',
-      password: '',
-      passwordConfirm: '',
+      // id: null,
+      pointTotal: 3,
+      email: '1@13.com',
+      password: 'pppppppp',
+      passwordConfirm: 'pppppppp'
     }
   }
   signUp = (email, password) => {
@@ -25,13 +29,38 @@ export default class SignUp extends React.Component {
         alert('Passwords must match')
         return
       }
-      firebase.auth().createUserWithEmailAndPassword(email, password).then(() => this.goToDash())
+      firebase.auth().createUserWithEmailAndPassword(email, password).then(() => this.logInfo(this.state))
     } catch (error) {
       console.log(error.toString())
     }
   }
-  goToDash() {
-    Actions.dash()
+  logInfo = (data) => {
+    let infoLog = {
+      email: data.email,
+      password: data.password,
+      pointTotal: data.pointTotal
+    }
+    fetch(apiURL, {
+      method: 'POST',
+      body: JSON.stringify(infoLog),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      this.goToDash(data)
+      console.log('THIS.STATE IN LOGINFO', this.state)
+    })
+    // .then(this.goToDash(data))
+    .catch(function (error) {
+      console.log('ERROR IN LOGINFO')
+    })
+  }
+  goToDash = (data) => {
+    console.log('DATA IN GOTODASH', data)
+    Actions.dash({id : data.user.id, email: data.user.email, pointTotal: data.user.pointTotal})
   }  
   render() {
     return (
@@ -108,25 +137,3 @@ const styles = StyleSheet.create({
     right: 8,
   },
 })
-
-{/* <View style={styles.page}>
-  <FormLabel>
-    <Text>Username</Text>
-    <FormInput placeholder='Username'
-    style={styles.input}/>
-    <Text>Password</Text>
-    <FormInput placeholder='Password must be at least 8 characters'
-    style={styles.input}/>
-    <Text>Confirm Password</Text>
-    <FormInput placeholder='Passwords must match'
-    style={styles.input}/>
-  </FormLabel>
-  <TouchableHighlight 
-  style={styles.signupButton}
-  title='Sign Up'
-  onPress={this.signUp}
-  >
-    <Text style={styles.buttonText}>Sign Up</Text>
-  </TouchableHighlight>
-  <Logo />
-</View> */}

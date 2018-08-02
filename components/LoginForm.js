@@ -7,6 +7,8 @@ import * as firebase from 'firebase'
 
 import Logo from './Logo'
 
+const apiURL = 'https://road-rewards-1.herokuapp.com/users/'
+
 export default class LoginForm extends React.Component {
   constructor(props) {
     super(props)
@@ -16,40 +18,29 @@ export default class LoginForm extends React.Component {
     }
   }
   logIn = (email, password) => {
-    // console.log('state',this.state)
+    try {
+      if (this.state.password.length < 8) {
+        alert('Password must be at least 8 characters long.')
+        return
+      } 
+      firebase.auth().signInWithEmailAndPassword(email, password).then(() => this.goToDash())
+      // sign in vs sign up
+    }
+    catch (error) {
+      console.log(error.toString())
+    }
+  }
+  goToDash = () => {
     Actions.dash()
-
-
-  //   try {
-  //     if (this.state.password.length < 8) {
-  //       console.log('password too short')
-  //       return
-  //     } 
-  //     firebase.auth().createUserWithEmailAndPassword(email, password)
-  //   }
-  //   catch (error) {
-  //     console.log(error.toString())
-  //   }
   }
-
-  // signUp = (email, password) => {
+  // logInfo = () => {
+  //   fetch(apiURL)
   // }
-  // logIn() {
-  //   Actions.loggedIn()
-  // }
-  test() {
-    console.log('state',this.state)
-    // console.log('props',this.props.firebaseConfig)
-  }
-  signUp() {
-    console.log(this.state)
-    Actions.signup()
-  }
   render() {
       return (
         <Container>
           <Header />
-          <Content>
+          <Container>
             <Form>
               <Item floatingLabel>
                 <Label>Email</Label>
@@ -69,7 +60,7 @@ export default class LoginForm extends React.Component {
                 <Text>Login</Text>
               </Button>
             </Form>
-          </Content>
+          </Container>
           <Logo />
         </Container>
     )
