@@ -6,6 +6,7 @@ import Dashboard from './components/Dashboard'
 import SignUp from './components/SignUp'
 import LoginForm from './components/LoginForm'
 import FadeView from './components/FadeView'
+import SignUpAuth from './components/SignUpAuth'
 
 import * as firebase from 'firebase'
 
@@ -25,9 +26,10 @@ export default class App extends React.Component {
     return (
       <Router>        
         <Stack key="root">
-          {/* <Scene hideNavBar={true} key="landing" component={Landing} /> */}
-          {/* <Scene hideNavBar={true} key="login" component={LoginForm} /> */}
-          <Scene hideNavBar={true} key="signup" component={SignUp} />
+          <Scene hideNavBar={true} key="login" component={SignUpAuth} />
+          {/* <Scene hideNavBar={true} key="landing" component={Landing} />
+          <Scene hideNavBar={true} key="login" component={LoginForm} />
+          <Scene hideNavBar={true} key="signup" component={SignUp} /> */}
           <Scene hideNavBar={true} key="dash" component={Dashboard} />
         </Stack>
       </Router>

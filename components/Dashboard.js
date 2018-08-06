@@ -3,7 +3,8 @@ import { StyleSheet, View, ImageBackground, TouchableHighlight } from 'react-nat
 import { Actions } from 'react-native-router-flux'
 import { KeepAwake } from 'expo'
 import moment from 'moment'
-import { Container, Header, Title, Input, Content, Form, Item, Label, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import { Container, Header, Title, Input, Content, Form, Item, Label, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base'
+import * as firebase from 'firebase'
 
 import Logo from './Logo'
 
@@ -24,25 +25,42 @@ export default class Landing extends React.Component {
     }
   }
   componentDidMount() {
-    this.fetchPoints(this.props.id)
+    this.fetchUserData()
   }
-  fetchPoints(id) {
-    fetch(apiURL + id)
-      .then(response => response.json())
-      .then(user => {
-        console.log('USER IN FETCHPOINTS', user)
-        var pointImport = user.pointTotal
-        var userID = user.id
-        this.setState({
-          storedPoints: pointImport,
-          id: userID,
-          isLoaded: true
-        })
-      }).catch((err) => console.log('err', err))
+  fetchUserData = (userEmail) => {
+    var user = firebase.auth().currentUser
+    var name, email, photoUrl, uid, emailVerified
+
+    if (user != null) {
+      email = user.email
+      uid = user.uid // The user's ID, unique to the Firebase project. Do NOT use
+      // this value to authenticate with your backend server, if
+      // you have one. Use User.getToken() instead.
+      this.getUser(email)
     }
+  }
+  getUser = (email) => {
+    console.log('GETUSER EMAIL', email)
+    fetch(apiURL)
+      .then(response => response.json())
+      .then(data => data.users.filter(
+        user => user.email === email
+      ))
+      .then(user => {
+        var pointImport = user[0].pointTotal
+        var userID = user[0].id
+        var userEmail = user[0].email
+        console.log('USER IN GETUSER', user)
+        this.setState({
+          email: userEmail,
+          storedPoints: pointImport,
+          isLoaded: true,
+          id: userID
+      })
+    })
+  }
   logPoints = () => {
     var storedPoints = this.state.storedPoints + this.state.counter
-    console.log('STOREDPOINTS', storedPoints)
     this.setState({
       storedPoints: storedPoints,
       startingMoment: moment()
@@ -53,7 +71,6 @@ export default class Landing extends React.Component {
     let pointsPosted = {
       pointTotal: data
     }
-    console.log('DATA', data, 'POINTSPOSTED', pointsPosted, 'ID', this.state.id)
     fetch(apiURL + this.state.id, {
       method: 'PUT',
       body: JSON.stringify(pointsPosted),
@@ -83,6 +100,7 @@ export default class Landing extends React.Component {
         <KeepAwake />
         <Container style={styles.container}>
           <Content style={{marginTop: 150}}>
+            {this.state.isLoaded ? <Text style={styles.bigText}>Welcome {this.state.email}</Text> : null}
             <Text
             style={styles.bigText}
             >Points Earned This Session</Text>
@@ -101,7 +119,7 @@ export default class Landing extends React.Component {
             style={styles.background}
             source={require('../odometer.jpg')}
             >
-              {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text style={styles.pointTotal}>Loading...</Text>}
+            {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text style={styles.pointTotal}>Loading...</Text>}
             </ImageBackground>
             <Container>
               <Button bordered success
@@ -161,37 +179,3 @@ const styles = StyleSheet.create({
     // marginLeft: 40,
   },
 })
-
-post = (data) => {
-  const url = `https://mo-jobs-database.herokuapp.com/company/`
-
-  let content = {
-    company: data.companyName,
-    resume: data.resume,
-    cover_letter: data.coverLetter,
-    date_applied: data.dateApplied,
-    interview_date: data.dateInterview,
-    description: data.description,
-    technologies: data.requiredTechnology
-  };
-
-  console.log('contnet', content)
-
-  fetch(url, {
-      method: 'POST',
-      body: JSON.stringify(content),
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      }
-    })
-    .then(resp => resp.json())
-    .then(company => {
-      console.log('response', company)
-      this.props.setCompany(company)
-    })
-    .catch(function (error) {
-      console.log('error')
-    })
-
-}

@@ -23,7 +23,12 @@ export default class LoginForm extends React.Component {
         alert('Password must be at least 8 characters long.')
         return
       } 
-      firebase.auth().signInWithEmailAndPassword(email, password).then(() => this.goToDash())
+      // firebase.auth().signInWithEmailAndPassword(email, password).then(() => this.goToDash(this.state))
+      firebase.auth().signInWithEmailAndPassword(email, password).catch((error) => {
+        var errorCode = error.code
+        var errorMessage = error.message
+        console.log('ERRORCODE', errorCode, 'ERRORMESSAGE', errorMessage)
+      })
       // sign in vs sign up
     }
     catch (error) {
@@ -33,9 +38,6 @@ export default class LoginForm extends React.Component {
   goToDash = () => {
     Actions.dash()
   }
-  // logInfo = () => {
-  //   fetch(apiURL)
-  // }
   render() {
       return (
         <Container>
