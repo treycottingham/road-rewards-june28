@@ -25,8 +25,6 @@ export default class GeoAndMoments extends React.Component {
     }
   }
   componentDidMount() {
-    // navigator.Geolocation.getCurrentPosition(geo_success, [geo_error], [geo_options])
-    // console.log('GEOERROR, GEOOPTIONS, GEOSUCCESS', geo_error,geo_options,geo_success)
     this.fetchUserData()
   }
   fetchUserData = (userEmail) => {
@@ -42,7 +40,7 @@ export default class GeoAndMoments extends React.Component {
     }
   }
   getUser = (email) => {
-    console.log('GETUSER EMAIL', email)
+    // console.log('GETUSER EMAIL', email)
     fetch(apiURL)
       .then(response => response.json())
       .then(data => data.users.filter(
@@ -52,7 +50,7 @@ export default class GeoAndMoments extends React.Component {
         var pointImport = user[0].pointTotal
         var userID = user[0].id
         var userEmail = user[0].email
-        console.log('USER IN GETUSER', user)
+        // console.log('USER IN GETUSER', user)
         this.setState({
           email: userEmail,
           storedPoints: pointImport,
@@ -65,7 +63,8 @@ export default class GeoAndMoments extends React.Component {
     var storedPoints = this.state.storedPoints + this.state.counter
     this.setState({
       storedPoints: storedPoints,
-      startingMoment: moment()
+      startingMoment: moment(),
+      counter: 0
     })
     this.updatePoints(storedPoints)
   }
@@ -82,8 +81,12 @@ export default class GeoAndMoments extends React.Component {
       }
     })
     .then(res => res.json())
+    // .then(data => {
+    //   console.log('DATA IN UPDATEPOINTS', data)
+    //   this.setState({counter: 0})
+    // })
     .catch(function (error) {
-      console.log('error')
+      console.log('ERROR IN UPDATEPOINTS', error)
     })
   }
   signOut() {
@@ -98,21 +101,22 @@ export default class GeoAndMoments extends React.Component {
             speed: position.coords.speed,
             isShown: true,
             currentMoment: moment(),
-            counter: moment().diff(this.state.startingMoment, 'seconds')
+            counter: moment().diff(this.state.startingMoment, 'minutes')
           })
         }
       },
       (error) => this.setState({ error: error.message }),
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+      { enableHighAccuracy: true, timeout: 21000, maximumAge: 1000, distanceFilter: 10 },
     )
-    }, 1000) //140 is speed I could double press
+    }, 20000) //140 is speed I could double press
     return (
       <Container>
         <Header />
         <KeepAwake />
         <Container style={styles.container}>
-          <Content style={{marginTop: 150}}>
-            {this.state.isShown ? <Text style={styles.bigText}>Speed: {this.state.speed}</Text> : null}
+          {this.state.isShown ? null : <Text>Points will begin to generate when you are moving at least 10MPH, please remember to drive safely.</Text>}
+          {this.state.isShown && <Content style={{marginTop: 150}}>
+            {/* {this.state.isShown ? <Text style={styles.bigText}>Speed: {this.state.speed}</Text> : null} */}
             {this.state.isLoaded ? <Text style={styles.bigText}>Welcome {this.state.email}</Text> : null}
             <Text
             style={styles.bigText}
@@ -146,7 +150,7 @@ export default class GeoAndMoments extends React.Component {
                   <Text>Log Out</Text>
               </Button>
             </Container>
-          </Content>
+          </Content>}
         </Container>
         <Logo />
       </Container>
@@ -165,7 +169,6 @@ const styles = StyleSheet.create({
   pointTotal: {
     color: 'white',
     letterSpacing: 18,
-    // marginLeft: 40,
   },
   image: {
     width: 100,
@@ -189,6 +192,5 @@ const styles = StyleSheet.create({
   text: {
     color: 'white',
     letterSpacing: 18,
-    // marginLeft: 40,
   },
 })

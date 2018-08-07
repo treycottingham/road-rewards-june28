@@ -93,11 +93,11 @@ export default class SignUpAuth extends React.Component {
               onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
               secureTextEntry={true} />
             </Item> */}
-            <Button bordered success
+            {/* <Button bordered success
             style={styles.button}
             onPress={() => this.signUp(this.state.email, this.state.password)}>
               <Text>Sign Up</Text>
-            </Button>
+            </Button> */}
             <Button bordered success
             style={styles.button}
             onPress={() => this.logIn(this.state.email, this.state.password)}>

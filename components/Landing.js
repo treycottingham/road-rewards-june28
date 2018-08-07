@@ -27,7 +27,7 @@ export default class Landing extends React.Component {
           </ImageBackground> */}
           <FadeView />
             <Button bordered full success style={styles.button} onPress={this.logInButton}><Text style={styles.buttonText}>Log In</Text></Button>
-            <Button bordered full success style={styles.button} onPress={this.signUpButton}><Text style={styles.buttonText}>SignUp</Text></Button>
+            {/* <Button bordered full success style={styles.button} onPress={this.signUpButton}><Text style={styles.buttonText}>SignUp</Text></Button> */}
         </Container>
     )
   }
