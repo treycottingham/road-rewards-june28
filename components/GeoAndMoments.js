@@ -10,7 +10,7 @@ import Logo from './Logo'
 
 const apiURL = 'https://road-rewards-1.herokuapp.com/users/'
 
-export default class Landing extends React.Component {
+export default class GeoAndMoments extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -91,10 +91,20 @@ export default class Landing extends React.Component {
   }
   render() {
     setTimeout(() => {
-      this.setState({
-        currentMoment: moment(),
-        counter: moment().diff(this.state.startingMoment, 'seconds')
-      })
+      this.watchId = navigator.geolocation.watchPosition(
+      (position) => {
+        if(position.coords.speed >= 0) {
+          return this.setState({
+            speed: position.coords.speed,
+            isShown: true,
+            currentMoment: moment(),
+            counter: moment().diff(this.state.startingMoment, 'seconds')
+          })
+        }
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000, distanceFilter: 10 },
+    )
     }, 1000) //140 is speed I could double press
     return (
       <Container>
@@ -102,6 +112,7 @@ export default class Landing extends React.Component {
         <KeepAwake />
         <Container style={styles.container}>
           <Content style={{marginTop: 150}}>
+            {this.state.isShown ? <Text style={styles.bigText}>Speed: {this.state.speed}</Text> : null}
             {this.state.isLoaded ? <Text style={styles.bigText}>Welcome {this.state.email}</Text> : null}
             <Text
             style={styles.bigText}

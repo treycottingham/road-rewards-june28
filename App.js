@@ -7,6 +7,8 @@ import SignUp from './components/SignUp'
 import LoginForm from './components/LoginForm'
 import FadeView from './components/FadeView'
 import SignUpAuth from './components/SignUpAuth'
+import Geolocation from './components/Geolocation'
+import GeoAndMoments from './components/GeoAndMoments'
 
 import * as firebase from 'firebase'
 
@@ -26,15 +28,14 @@ export default class App extends React.Component {
     return (
       <Router>        
         <Stack key="root">
-          <Scene hideNavBar={true} key="login" component={SignUpAuth} />
+          {/* <Scene hideNavBar={true} key="login" component={SignUpAuth} /> */}
           {/* <Scene hideNavBar={true} key="landing" component={Landing} />
           <Scene hideNavBar={true} key="login" component={LoginForm} />
           <Scene hideNavBar={true} key="signup" component={SignUp} /> */}
-          <Scene hideNavBar={true} key="dash" component={Dashboard} />
+          {/* <Scene hideNavBar={true} key="dash" component={Dashboard} /> */}
+          <Scene hideNavBar={true} key="dash" component={GeoAndMoments} />
         </Stack>
       </Router>
     )
   }
 }
-
-// Eventually I will have to pass "id" as a prop down to the dashboard component
