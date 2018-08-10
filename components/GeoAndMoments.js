@@ -7,6 +7,7 @@ import { Container, Header, Title, Input, Content, Form, Item, Label, Footer, Fo
 import * as firebase from 'firebase'
 
 import Logo from './Logo'
+import Feedback from './Feedback'
 
 const apiURL = 'https://road-rewards-1.herokuapp.com/users/'
 
@@ -90,13 +91,13 @@ export default class GeoAndMoments extends React.Component {
     })
   }
   signOut() {
-    Actions.landing()
+    firebase.auth().signOut().then(Actions.landing())
   }
   render() {
     setTimeout(() => {
       this.watchId = navigator.geolocation.watchPosition(
       (position) => {
-        if(position.coords.speed >= 0) {
+        if(position.coords.speed >= 10) {
           return this.setState({
             speed: position.coords.speed,
             isShown: true,
@@ -111,11 +112,12 @@ export default class GeoAndMoments extends React.Component {
     }, 20000) //140 is speed I could double press
     return (
       <Container>
+        <Container>
         <Header />
         <KeepAwake />
-        <Container style={styles.container}>
-          {this.state.isShown ? null : <Text>Points will begin to generate when you are moving at least 10MPH, please remember to drive safely.</Text>}
-          {this.state.isShown && <Content style={{marginTop: 150}}>
+        {this.state.isShown ? null : <Text style={styles.beginText}>Points will begin to generate when you are moving at least 10MPH, please remember to drive safely.</Text>}
+        {this.state.isShown && <Container style={styles.container}>
+          <Content style={styles.dashboard}>
             {/* {this.state.isShown ? <Text style={styles.bigText}>Speed: {this.state.speed}</Text> : null} */}
             {this.state.isLoaded ? <Text style={styles.bigText}>Welcome {this.state.email}</Text> : null}
             <Text
@@ -139,20 +141,22 @@ export default class GeoAndMoments extends React.Component {
             {this.state.isLoaded ? <Text style={styles.pointTotal}>{this.state.storedPoints}</Text> : <Text style={styles.pointTotal}>Loading...</Text>}
             </ImageBackground>
             <Container>
-              <Button bordered success
+              <Button bordered light
                 onPress={this.logPoints}
                 style={{marginLeft: 50, marginTop: 10}}>
                   <Text>Add Points to Total</Text>
               </Button>
-              <Button bordered success
+              <Button bordered light
                 onPress={this.signOut}
                 style={{marginLeft: 92, marginTop: 10}}>
                   <Text>Log Out</Text>
               </Button>
             </Container>
-          </Content>}
-        </Container>
+          </Content>
+        </Container>}
         <Logo />
+        </Container>
+        <Feedback />
       </Container>
     )
   }
@@ -165,6 +169,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 25,
     fontFamily: 'TrebuchetMS',
+    color: 'white',
+  },
+  beginText: {
+    marginTop: 6,
+    marginBottom: 5,
+    textAlign: 'center',
+    fontSize: 25,
+    fontFamily: 'TrebuchetMS',
+    color: 'black',
+  },
+  dashboard: {
+    marginTop: 150,
   },
   pointTotal: {
     color: 'white',
@@ -185,6 +201,7 @@ const styles = StyleSheet.create({
     marginLeft: 65,
   },
   container: {
+    backgroundColor: 'green',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',

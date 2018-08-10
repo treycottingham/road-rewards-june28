@@ -5,6 +5,7 @@ import { Container, Header, Title, Item, Content, Label, Input, Form, Footer, Fo
 import * as firebase from 'firebase'
 
 import Logo from './Logo'
+import Feedback from './Feedback'
 
 const apiURL = 'https://road-rewards-1.herokuapp.com/users/'
 
@@ -12,16 +13,19 @@ export default class SignUpAuth extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      pointTotal: 7,
-      email: '1@2.com',
-      password: 'pppppppp',
-      passwordConfirm: 'pppppppp'
+      pointTotal: 0,
+      email: '',
+      password: '',
+      passwordConfirm: ''
     }
   }
   signUp = (email, password) => {
     try {
       if (this.state.password.length < 8) {
         alert('Password must be at least 8 characters')
+        return
+      } else if (this.state.password !== this.state.passwordConfirm) {
+        alert('Passwords must match')
         return
       }
       firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -66,6 +70,9 @@ export default class SignUpAuth extends React.Component {
         this.goToDash()
       })
   }
+  // feedback = () => {
+
+  // }
   goToDash = () => {
     Actions.dash()
   }  
@@ -87,24 +94,30 @@ export default class SignUpAuth extends React.Component {
               onChangeText={(password) => this.setState({password})}
               secureTextEntry={true} />
             </Item>
-            {/* <Item floatingLabel last>
+            {this.props.passwordConfirm && <Item floatingLabel last>
               <Label>Confirm Password</Label>
               <Input 
               onChangeText={(passwordConfirm) => this.setState({passwordConfirm})}
               secureTextEntry={true} />
-            </Item> */}
-            {/* <Button bordered success
+            </Item>}
+            {this.props.passwordConfirm && <Button bordered success
             style={styles.button}
             onPress={() => this.signUp(this.state.email, this.state.password)}>
               <Text>Sign Up</Text>
-            </Button> */}
-            <Button bordered success
+            </Button>}
+            {this.props.passwordConfirm ? null : <Button bordered success
             style={styles.button}
             onPress={() => this.logIn(this.state.email, this.state.password)}>
               <Text>Log In</Text>
-            </Button>
+            </Button>}
+            {/* <Button success 
+            style={styles.button}>
+            onPress={() => this.feedback()}
+              <Text>Submit Feedback</Text>
+            </Button> */}
           </Form>
         </Content>
+        <Feedback />
           <Logo />
       </Container>
     )
